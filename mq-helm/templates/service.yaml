@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "Helming.fullname" . }}
+  name: {{ .Values.service.name}}
   labels:
-    {{- include "Helming.labels" . | nindent 4 }}
+    app: mq-web
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port:  {{ .Values.service.port }}
+      targetPort:  {{ .Values.service.targetPort }}
       protocol: TCP
-      name: http
+      
   selector:
-    {{- include "Helming.selectorLabels" . | nindent 4 }}
+    app: mq-web
