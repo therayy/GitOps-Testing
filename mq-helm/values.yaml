@@ -2,7 +2,21 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 service:
-  name: mq-web
   type: ClusterIP
   port: 9443
   targetPort: 9443
+
+route:
+  name: mqweb
+  wildcardPolicy: None
+
+statefulset:
+  serviceName: mq
+  serviceAccount: mq
+  image: ibmcom/mq
+  containerPort: 1414
+  mountPath: /var/mqm
+  storage: 20Gi
+  storageClassName: ibmc-block-gold
+
+

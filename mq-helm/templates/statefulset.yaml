@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mq
+spec:
+  selector:
+    matchLabels:
+      app: mq
+  serviceName: {{ .Values.statfulset.serviceName }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mq
+    spec:
+      serviceAccount: {{ .Values.statfulset.servicAccount }}
+      containers:
+      - name: mq
+        securityContext:
+          privileged: true
+        image: {{ .Values.statfulset.image }}
+        env:
+        - name: LICENSE
+          value: accept
+        - name: MQ_QMGR_NAME
+          value: qmgr
+        ports:
+        - containerPort: {{ .Values.statfulset.containerPort }}
+          name: mq
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: {{ .Values.statfulset.mountPath }}
+          name: mqvol
+  volumeClaimTemplates:
+  - metadata:
+      name: mqvol
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.statfulset.storage }}
+      storageClassName: {{ .Values.statfulset.storageClassName }}
